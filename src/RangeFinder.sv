@@ -13,29 +13,23 @@ module tt_um_erika (
     output logic [7:0]  uio_oe
 );
 
-    // Tie-offs by default
-    always_comb begin
-        uio_out = 8'b0;
-        uio_oe  = 8'b0;
-    end
-
-    // Internal signals
     logic [7:0] range;
     logic error;
 
-    // Map range to dedicated outputs
     assign uo_out = range;
 
-    // Drive error on uio[0]
+    // one driver for all uio_* signals
     always_comb begin
+        uio_out = 8'b0;
+        uio_oe  = 8'b0;
+
         uio_out[0] = error;
-        uio_oe[0]  = 1'b1;   // drive uio[0] as output
+        uio_oe[0]  = 1'b1;
     end
 
     logic go_eff;
     assign go_eff = uio_in[0] & ena;
 
-    // Instantiate your design
     RangeFinder #(.WIDTH(8)) dut (
         .data_in (ui_in),
         .clock   (clk),
