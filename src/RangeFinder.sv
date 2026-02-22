@@ -3,6 +3,7 @@
 module tt_um_erika (
     input  logic        clk,
     input  logic        rst_n,
+    input  logic        ena,
 
     input  logic [7:0]  ui_in,
     output logic [7:0]  uo_out,
@@ -12,7 +13,7 @@ module tt_um_erika (
     output logic [7:0]  uio_oe
 );
 
-    // Tie-offs by default (prevents Yosys "undriven" weirdness)
+    // Tie-offs by default
     always_comb begin
         uio_out = 8'b0;
         uio_oe  = 8'b0;
@@ -31,12 +32,15 @@ module tt_um_erika (
         uio_oe[0]  = 1'b1;   // drive uio[0] as output
     end
 
+    logic go_eff;
+    assign go_eff = uio_in[0] & ena;
+
     // Instantiate your design
     RangeFinder #(.WIDTH(8)) dut (
         .data_in (ui_in),
         .clock   (clk),
-        .reset   (~rst_n),     // your module reset is active-high
-        .go      (uio_in[0]),  // or ui_in[0] if you prefer
+        .reset   (~rst_n),
+        .go      (go_eff),
         .finish  (uio_in[1]),
         .range   (range),
         .error   (error)
