@@ -171,11 +171,6 @@ module tinyfarm_top #(
     // field_t fields [0:3];
     logic [2:0] inventory [0:3];
 
-    // logic [2:0] inv_wheat;
-    // logic [2:0] inv_corn;
-    // logic [2:0] inv_carrot;
-    // logic [2:0] inv_tomato;
-
     logic [1:0] order_crop;
     logic [1:0] order_qty;   // 1..3
     logic [3:0] order_timer;
@@ -295,7 +290,6 @@ module tinyfarm_top #(
 
     // -----------------------------
     // Game tick divider
-    // localparam int TICK_DIV_MAX = (CLK_HZ / GAME_TICK_HZ) - 1;
     `ifdef SIM
         localparam int TICK_DIV_MAX = 9;  // one game tick every 10 clk cycles in simulation
     `else
