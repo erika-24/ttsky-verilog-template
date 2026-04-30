@@ -64,7 +64,7 @@ module tt_um_erika24 (
 
     tinyfarm_top #(
         .CLK_HZ(25_000_000),
-        .GAME_TICK_HZ(4)
+        .GAME_TICK_HZ(20)
     ) tinyfarm_inst (
         .clk(clk),
         .rst_n(rst_n),
@@ -295,7 +295,12 @@ module tinyfarm_top #(
 
     // -----------------------------
     // Game tick divider
-    localparam int TICK_DIV_MAX = (CLK_HZ / GAME_TICK_HZ) - 1;
+    // localparam int TICK_DIV_MAX = (CLK_HZ / GAME_TICK_HZ) - 1;
+    `ifdef SIM
+        localparam int TICK_DIV_MAX = 9;  // one game tick every 10 clk cycles in simulation
+    `else
+        localparam int TICK_DIV_MAX = (CLK_HZ / GAME_TICK_HZ) - 1;
+    `endif
 
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
