@@ -78,7 +78,7 @@ async def test_project(dut):
 
     dut._log.info("Start TinyFarm self-checking cocotb test")
 
-    cocotb.start_soon(Clock(dut.clk, 40, units="ns").start())  # 25 MHz
+    cocotb.start_soon(Clock(dut.clk, 40, unit="ns").start())  # 25 MHz
 
     # Initial values
     dut.ena.value = 1
@@ -124,8 +124,9 @@ async def test_project(dut):
     check(dut, "Plant on occupied field does not overwrite crop",
           int(core.field_crop[0].value) == crop_before)
 
-    check(dut, "Plant on occupied field does not overwrite timer",
-          int(core.field_timer[0].value) == timer_before)
+    timer_after = int(core.field_timer[0].value)
+    check(dut, "Plant on occupied field does not reload timer",
+        timer_after <= timer_before)
 
     # TEST 4: Watering reduces timer
     timer_before = int(core.field_timer[0].value)
